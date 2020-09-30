@@ -243,6 +243,7 @@ EXAMPLES_DUAL_MODE=         \
 	gatt_streamer_server    \
 	spp_and_gatt_counter    \
 	spp_and_gatt_streamer   \
+	v2_tracker              \
 
 # List of GATT files used by either LE_ONLY or DUAL_MODE examples
 
@@ -263,6 +264,7 @@ EXAMPLES_GATT_FILES =           \
 	spp_and_gatt_counter.gatt   \
 	spp_and_gatt_streamer.gatt  \
 	ublox_spp_le_counter.gatt   \
+	v2_tracker.gatt             \
 
 # .h for .gatt
 EXAMPLES_GATT_H_FILES = $(EXAMPLES_GATT_FILES:.gatt=.h)
@@ -347,6 +349,9 @@ spp_and_gatt_counter: spp_and_gatt_counter.h ${CORE_OBJ} ${COMMON_OBJ} ${CLASSIC
 
 spp_and_gatt_streamer: spp_and_gatt_streamer.h ${CORE_OBJ} ${COMMON_OBJ} ${CLASSIC_OBJ} ${ATT_OBJ} ${GATT_SERVER_OBJ} spp_and_gatt_streamer.c
 	${CC} $(filter-out spp_and_gatt_streamer.h,$^)  ${CFLAGS} ${LDFLAGS} -o $@
+
+v2_tracker: v2_tracker.h ${CORE_OBJ} ${COMMON_OBJ} ${CLASSIC_OBJ} ${ATT_OBJ} ${GATT_SERVER_OBJ} v2_tracker.c
+	${CC} $(filter-out v2_tracker.h,$^)  ${CFLAGS} ${LDFLAGS} -o $@
 
 spp_streamer: ${CORE_OBJ} ${COMMON_OBJ} ${CLASSIC_OBJ} ${SDP_CLIENT} spp_streamer.c
 	${CC} $^ ${CFLAGS} ${LDFLAGS} -o $@
