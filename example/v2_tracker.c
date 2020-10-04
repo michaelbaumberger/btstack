@@ -72,7 +72,7 @@
 #define MAX_NR_CONNECTIONS 3 
 
 // Fixed passkey - used with sm_pairing_peripheral. Passkey is random in general
-#define FIXED_PASSKEY 0000
+#define FIXED_PASSKEY 123456
 
 static void  hci_packet_handler (uint8_t packet_type, uint16_t channel, uint8_t *packet, uint16_t size);
 static void  att_packet_handler (uint8_t packet_type, uint16_t channel, uint8_t *packet, uint16_t size);
@@ -84,9 +84,9 @@ const uint8_t adv_data[] = {
     // Flags general discoverable, BR/EDR not supported
     0x02, BLUETOOTH_DATA_TYPE_FLAGS, 0x06, 
     // Name
-    0x0c, BLUETOOTH_DATA_TYPE_COMPLETE_LOCAL_NAME, 'v', '2', 't', 'r', 'a', 'c', 'k', ' ', 'B', 'L', 'E',
-    // Incomplete List of 16-bit Service Class UUIDs -- FF10 - only valid for testing!
-    0x03, BLUETOOTH_DATA_TYPE_INCOMPLETE_LIST_OF_16_BIT_SERVICE_CLASS_UUIDS, 0x10, 0xff,
+    0x08, BLUETOOTH_DATA_TYPE_COMPLETE_LOCAL_NAME, 'v', '2', 't', 'r', 'a', 'c', 'k',
+	// UUIDs
+	0x11, BLUETOOTH_DATA_TYPE_INCOMPLETE_LIST_OF_128_BIT_SERVICE_CLASS_UUIDS, 0x61, 0x56, 0x61, 0x12, 0x73, 0x2a, 0x38, 0x83, 0x81, 0x44, 0xcf, 0xa5, 0x6f, 0xde, 0x1f, 0x7f,
 };
 const uint8_t adv_data_len = sizeof(adv_data);
 
@@ -459,17 +459,13 @@ static int att_write_callback(hci_con_handle_t con_handle, uint16_t att_handle, 
     if (transaction_mode != ATT_TRANSACTION_MODE_NONE) return 0;
     le_streamer_connection_t * context = connection_for_conn_handle(con_handle);
     switch(att_handle){
-        case ATT_CHARACTERISTIC_0000FF11_0000_1000_8000_00805F9B34FB_01_CLIENT_CONFIGURATION_HANDLE:
-        case ATT_CHARACTERISTIC_0000FF12_0000_1000_8000_00805F9B34FB_01_CLIENT_CONFIGURATION_HANDLE:
+		case ATT_CHARACTERISTIC_7CBCE32C_95FE_40E8_9FE4_A50C2F09986F_01_CLIENT_CONFIGURATION_HANDLE:
             context->le_notification_enabled = little_endian_read_16(buffer, 0) == GATT_CLIENT_CHARACTERISTICS_CONFIGURATION_NOTIFICATION;
             printf("%c: Notifications enabled %u\n", context->name, context->le_notification_enabled); 
             if (context->le_notification_enabled){
                 switch (att_handle){
-                    case ATT_CHARACTERISTIC_0000FF11_0000_1000_8000_00805F9B34FB_01_CLIENT_CONFIGURATION_HANDLE:
-                        context->value_handle = ATT_CHARACTERISTIC_0000FF11_0000_1000_8000_00805F9B34FB_01_VALUE_HANDLE;
-                        break;
-                    case ATT_CHARACTERISTIC_0000FF12_0000_1000_8000_00805F9B34FB_01_CLIENT_CONFIGURATION_HANDLE:
-                        context->value_handle = ATT_CHARACTERISTIC_0000FF12_0000_1000_8000_00805F9B34FB_01_VALUE_HANDLE;
+                    case ATT_CHARACTERISTIC_7CBCE32C_95FE_40E8_9FE4_A50C2F09986F_01_CLIENT_CONFIGURATION_HANDLE:
+                        context->value_handle = ATT_CHARACTERISTIC_7CBCE32C_95FE_40E8_9FE4_A50C2F09986F_01_VALUE_HANDLE;
                         break;
                     default:
                         break;
@@ -478,8 +474,7 @@ static int att_write_callback(hci_con_handle_t con_handle, uint16_t att_handle, 
             }
             test_reset(context);
             break;
-        case ATT_CHARACTERISTIC_0000FF11_0000_1000_8000_00805F9B34FB_01_VALUE_HANDLE:
-        case ATT_CHARACTERISTIC_0000FF12_0000_1000_8000_00805F9B34FB_01_VALUE_HANDLE:
+        case ATT_CHARACTERISTIC_3C9A1DB7_2A7B_49DE_83BD_806F4418589F_01_VALUE_HANDLE:
         	for (i = 0; i < context->test_data_len; i++)
         	{
         	    if (i > 0) printf(":");

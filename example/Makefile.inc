@@ -351,7 +351,7 @@ spp_and_gatt_streamer: spp_and_gatt_streamer.h ${CORE_OBJ} ${COMMON_OBJ} ${CLASS
 	${CC} $(filter-out spp_and_gatt_streamer.h,$^)  ${CFLAGS} ${LDFLAGS} -o $@
 
 v2_tracker: v2_tracker.h ${CORE_OBJ} ${COMMON_OBJ} ${CLASSIC_OBJ} ${ATT_OBJ} ${GATT_SERVER_OBJ} v2_tracker.c
-	${CC} $(filter-out v2_tracker.h,$^)  ${CFLAGS} ${LDFLAGS} -o $@
+	${CC} $^ ${CFLAGS} ${LDFLAGS} -o $@
 
 spp_streamer: ${CORE_OBJ} ${COMMON_OBJ} ${CLASSIC_OBJ} ${SDP_CLIENT} spp_streamer.c
 	${CC} $^ ${CFLAGS} ${LDFLAGS} -o $@
